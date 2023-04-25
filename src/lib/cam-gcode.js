@@ -43,6 +43,7 @@ export const expandHookGCode = (operation) =>{
     return op;
 }
 
+// Here is where the gcode generation really starts
 export function getGcode(settings, documents, operations, documentCacheHolder, showAlert, done, progress) {
     "use strict";
 
@@ -151,6 +152,9 @@ export function getGcode(settings, documents, operations, documentCacheHolder, s
 
                         invokeWebWorker(require('worker-loader!./workers/cam-lathe.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)
 
+                    } else if (op.type.substring(0, 21) === 'Virtual Wire ECM Cut ') {
+                        showAlert("Processing Virtual Wire EDM Cut...")
+                        invokeWebWorker(require('worker-loader!./workers/cam-wire.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)
                     } else {
                         showAlert("Unknown operation " + op.type, 'warning')
                         cb()

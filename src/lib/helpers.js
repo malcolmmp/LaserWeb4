@@ -14,8 +14,10 @@ export function appendExt(filename, ext) {
     return (!filename.match(new RegExp(ext.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+"$",'gi'))) ? (filename+ext):filename;
 }
 
+// This is the function that is ultimately called by the Generate gocde button
 export function openDataWindow(data, mimetype='text/plain;charset=utf-8', target="data")
 {
+        console.log(data);s
         let blob = new Blob([data], {type: mimetype});
         let reader = new FileReader();
             reader.onloadend = function(e) {

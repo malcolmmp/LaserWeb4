@@ -278,6 +278,18 @@ export function getLaserCutGcodeFromOp(settings, opIndex, op, geometry, openGeom
 
     if (op.hookOperationEnd.length) gcode += op.hookOperationEnd;
 
+    checkVariableType(gcode);
+
     done(gcode)
 
 } // getLaserCutGcodeFromOp
+
+function checkVariableType(variable) {
+    if (typeof variable === 'string') {
+      console.log('The variable is a string.');
+    } else if (Array.isArray(variable)) {
+      console.log('The variable is an array.');
+    } else {
+      console.log('The variable is neither a string nor an array.');
+    }
+}

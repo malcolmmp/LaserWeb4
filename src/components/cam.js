@@ -100,6 +100,7 @@ class Cam extends React.Component {
                     percent = ((Array.isArray(threads)) ? (threads.reduce((a, b) => a + b, 0) / threads.length) : threads).toFixed(2);
                 }
             );
+            console.log(QE);
             return QE;
         }
 
