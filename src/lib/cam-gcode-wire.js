@@ -301,64 +301,163 @@ function rackGcodePostProcess(gcode, wear_ratio) {
     const critcal_distance_threshold_for_segmentation = 0.05;
     
     const rapid_feedrate_for_G0_commands = 1200;
-    let plunges_reordered = findAndReorderPlunges(gcode);
-    let new_gcode = "We are in the gcode processing pipeline\n";
+    let plunges_reordered = findAndReorderPlunges(gcode, wear_ratio);
+    console.log("Plunges Reordered: \n", plunges_reordered);
+    // let new_gcode = "We are in the gcode processing pipeline\n";
     // Split the gcode string into an array of lines
-    const lines = plunges_reordered.split('\n');
+    // const lines = plunges_reordered.split('\n');
   
-    // Iterate through each line in the array
-    for (let i = 0; i < lines.length; i++) {
-        // Print the current line to the console
-        // console.log(lines[i]);
-        new_gcode += lines[i] + "\n";
-    }
-    console.log(new_gcode);
-    return new_gcode
+    // // Iterate through each line in the array
+    // for (let i = 0; i < lines.length; i++) {
+    //     // Print the current line to the console
+    //     // console.log(lines[i]);
+    //     new_gcode += lines[i] + "\n";
+    // }
+    // console.log(new_gcode);
+    return plunges_reordered;
 }
 
-function findAndReorderPlunges(gcode) {
+// function findAndReorderPlunges(gcode) {
+//     const plunge_initiation_string = "; plunge";
+//     const lines = gcode.split('\n');
+
+//     let plunges = "";
+//     let last_line_was_plunge = false;
+//     let plunges_removed = "";
+//     let last_xy = [0, 0];
+//     for (let i = 0; i < lines.length; i++) {
+        
+//         // console.log("Processing Line");
+//         // console.log(lines[i]);
+//         if (lines[i].substring(0, 8) === plunge_initiation_string) {
+//             console.log("Found a plunge");
+//             plunges += "G0 Z1.0\n" + "G0 X" + last_xy[0] + " Y" + last_xy[1] + "\n";
+//             plunges += lines[i] + "\n" + lines[i + 1] + "\n";
+//             last_line_was_plunge = true;
+//         } else {
+//             if (last_line_was_plunge) {
+//                 last_line_was_plunge = false;
+//                 continue;
+//             } else {
+//                 plunges_removed += lines[i] + "\n";
+//             }
+//         }
+//         if (is_move_with_xy(lines[i])) {
+//             last_xy = get_xy(lines[i]);
+//         }
+//     }
+//     let add_back_plunges = "";
+//     let plunges_removed_lines = plunges_removed.split('\n');
+//     // let plunges_added_back = false
+//     for (let i = 0; i < plunges_removed_lines.length; i++) {
+//         // if (plunges_removed_lines[i].substring(0, 8) === "; Path 0") {
+//         if (plunges_removed_lines[i].substring(0, 13) === "; Wear Ratio:") {
+//             console.log("Found the wear ratio line");
+//             add_back_plunges += plunges + "\n\n\n" + plunges_removed_lines[i] + "\n;\n";
+            
+//         } else {
+//             add_back_plunges += plunges_removed_lines[i] + "\n";
+//         }
+//     }
+//     return add_back_plunges
+// } 
+
+function findAndReorderPlunges(gcode, wear_ratio) {
     const plunge_initiation_string = "; plunge";
     const lines = gcode.split('\n');
 
     let plunges = "";
-    let last_line_was_plunge = false;
-    let plunges_removed = "";
+    // let last_line_was_plunge = false;
+    // let plunges_removed = "";
     let last_xy = [0, 0];
     for (let i = 0; i < lines.length; i++) {
-        
-        // console.log("Processing Line");
-        // console.log(lines[i]);
         if (lines[i].substring(0, 8) === plunge_initiation_string) {
             console.log("Found a plunge");
             plunges += "G0 Z1.0\n" + "G0 X" + last_xy[0] + " Y" + last_xy[1] + "\n";
             plunges += lines[i] + "\n" + lines[i + 1] + "\n";
-            last_line_was_plunge = true;
-        } else {
-            if (last_line_was_plunge) {
-                last_line_was_plunge = false;
-                continue;
+            // last_line_was_plunge = true;
+        } 
+        update_xy(lines[i], last_xy);
+        // else {
+        //     // if (last_line_was_plunge) {
+        //     //     last_line_was_plunge = false;
+        //     //     continue;
+        //     // } else {
+        //     //     // plunges_removed += lines[i] + "\n";
+        //     // }
+        // }
+        // if (is_move_with_xy(lines[i])) {
+        //     last_xy = get_xy(lines[i]);
+        // }
+    }
+    console.log("Plunges: \n", plunges);
+    let z_added = add_z(gcode, wear_ratio);
+    console.log("Z Added: \n", z_added);
+    let plunges_at_begining = "";
+    // let plunges_removed_lines = plunges_removed.split('\n');
+    let plunges_added_back = false;
+    const line_to_add_plunges_before = "; Path 0 \n";
+    let z_added_lines = z_added.split('\n');
+    for (let i = 0; i < z_added_lines.length; i++) {
+        if (z_added_lines[i].substring(0, 8) === line_to_add_plunges_before.substring(0, 8)) {
+        // if (plunges_removed_lines[i].substring(0, 13) === "; Wear Ratio:") {
+            console.log("Found the Path 0 line");
+            if (!plunges_added_back) {
+                plunges_at_begining += plunges + "\n\n\n" + line_to_add_plunges_before + "\n;\n";
+                plunges_added_back = true;
             } else {
-                plunges_removed += lines[i] + "\n";
+                console.log("MAJOR ERROR: Found the Path 0 line twice");
+                plunges_at_begining += z_added_lines[i];
             }
-        }
-        if (is_move_with_xy(lines[i])) {
-            last_xy = get_xy(lines[i]);
-        }
-    }
-    let add_back_plunges = "";
-    let plunges_removed_lines = plunges_removed.split('\n');
-    // let plunges_added_back = false
-    for (let i = 0; i < plunges_removed_lines.length; i++) {
-        if (plunges_removed_lines[i].substring(0, 8) === "; Path 0") {
-            console.log("Found Path 0");
-            add_back_plunges += plunges + "\n\n\n" + plunges_removed_lines[i] + "\n";
-            
         } else {
-            add_back_plunges += plunges_removed_lines[i] + "\n";
+            plunges_at_begining += z_added_lines[i] + "\n";
         }
     }
-    return add_back_plunges
-} 
+    return plunges_at_begining;
+}
+
+function add_z(gcode, wear_ratio) {
+    let last_xy = [0, 0];
+    let lines = gcode.split('\n');
+    let current_z = 0;
+    let first_x_found = false;
+    let first_y_found = false;
+
+    let new_gcode = "";
+    for (let i = 0; i < lines.length; i++) {
+        // if (is_move_with_xy(lines[i])) {
+        if (is_move(lines[i]) === 0 || is_move(lines[i]) === 1) {
+            let [gcode, this_xy, this_z, x_found, y_found] = correct_line(lines[i], wear_ratio, last_xy, current_z, first_x_found, first_y_found);
+            if (!first_x_found && x_found) {
+                first_x_found = true;
+            }
+            if (!first_y_found && y_found) {
+                first_y_found = true;
+            }
+            new_gcode += gcode;
+            last_xy = this_xy;
+            current_z = this_z;
+            // new_gcode += correct_line(lines[i], wear_ratio, last_xy, current_z);
+        } else {
+            new_gcode += lines[i] + "\n";
+        }
+    }
+    return new_gcode;
+}
+
+function get_magnitude(point1, point2, xy_found) {
+    console.log("Point 1: ", point1);
+    console.log("Point 2: ", point2);
+    console.log("XY Found: ", xy_found);
+    let diff = [0, 0];
+    if (xy_found) {
+        diff = [point1[0] - point2[0], point1[1] - point2[1]];
+    }
+    console.log("Diff: ", diff);
+    let distance = Math.sqrt(diff[0] * diff[0] + diff[1] * diff[1]);
+    console.log(distance)
+    return distance;
+}
 
 function checkVariableType(variable) {
     if (typeof variable === 'string') {
@@ -388,12 +487,196 @@ function is_move_with_xy(gcode_line) {
     }
 }
 
+// If the line is a move with both x and y values, it returns 4
+// If the line is a move with only a x value, it returns 1
+// If the line is a move with only a y value, it returns 2
+// If the line is a move with only a z value, it returns 3
+// If the line is a move without an x or a y value it return 5
+// If the line is not a move, it returns 0
+function correct_line(gcode_line, wear_ratio, last_xy, current_z, first_x_found, first_y_found) {
+    let x = -999999;
+    let has_x = false;
+    let y = -999999;
+    let has_y = false;
+    let z = -999999;
+    let has_z = false;
+    let g_number = -999999;
+    let has_f = false;
+    let f = -999999;
+    if (gcode_line.substring(0, 2) === "G0") {
+        g_number = 0;
+    } else if (gcode_line.substring(0, 2) === "G1") {
+        g_number = 1;
+    } else {
+        console.log("did not find a g0 or g1 in line fed into correct_line");
+    }
+    let this_first_x_found = first_x_found;
+    let this_first_y_found = first_y_found;
+    let already_found = first_x_found && first_y_found;
+    let components = gcode_line.split(" ");
+    for (let i = 0; i < components.length; i++) {
+        if (components[i].substring(0, 1) === "X") {
+            x = parseFloat(components[i].substring(1, components[i].length));
+            has_x = true;
+            if (!this_first_x_found) {
+                this_first_x_found = true;
+            }
+        } else if (components[i].substring(0, 1) === "Y") {
+            y = parseFloat(components[i].substring(1, components[i].length));
+            has_y = true;
+            if (!this_first_y_found) {
+                this_first_y_found = true;
+            }
+        } else if (components[i].substring(0, 1) === "Z") {
+            z = parseFloat(components[i].substring(1, components[i].length));
+            has_z = true;
+        } else if (components[i].substring(0, 1) == "F") {
+            f = parseFloat(components[i].substring(1, components[i].length));
+            has_f = true;
+        } else {
+            console.log("Found a component that is not x, y, or z");
+        }
+    }
+    // let x_y_found = first_x_found && first_y_found;
+
+    if (has_f) {
+        if (has_x && has_y) {
+            // Has x and y values
+            // For the case were it has x and y values, we don't need to worry about the z value
+            // because we will be overwriting it anyway
+            let distance = get_magnitude([x, y], last_xy, already_found);
+            last_xy = [x, y];
+            current_z += distance * wear_ratio;
+            let gcode_str = "G" + g_number + " X" + x + " Y" + y + " Z" + current_z + " F" + f + "\n"
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (has_x && !has_y) {
+            // Just an x value
+            let distance = get_magnitude([x, last_xy[1]], last_xy, already_found);
+            // Update the last y value
+            last_xy = [x, last_xy[1]];
+            current_z += distance * wear_ratio;
+            let gcode_str = "G" + g_number + " X" + x + " Z" + current_z + " F" + f + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (!has_x && has_y) {
+            // Just a y value
+            let distance = get_magnitude([last_xy[0], y], last_xy, already_found);
+            // Update the last y value
+            last_xy = [last_xy[0], y];
+            current_z += distance * wear_ratio;
+            let gcode_str = "G" + g_number + " Y" + y + " Z" + current_z + " F" + f + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (has_z) {
+            // Just a z value
+            let gcode_str = "G" + g_number + " Z" + current_z + " F" + f + "\n";
+            return [gcode_str, last_xy, current_z];
+        } else {
+            console.log("Found a line that is not a move: \n" + gcode_line);
+            let gcode_str = gcode_line + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        }
+    } else {
+        if (has_x && has_y) {
+            // Has x and y values
+            // For the case were it has x and y values, we don't need to worry about the z value
+            // because we will be overwriting it anyway
+            let distance = get_magnitude([x, y], last_xy, already_found);
+            last_xy = [x, y];
+            current_z += distance * wear_ratio;
+            let gcode_str =  "G" + g_number + " X" + x + " Y" + y + " Z" + current_z + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (has_x && !has_y) {
+            // Just an x value
+            let distance = get_magnitude([x, last_xy[1]], last_xy, already_found);
+            // Update the last y value
+            last_xy = [x, last_xy[1]];
+            current_z += distance * wear_ratio;
+            let gcode_str = "G" + g_number + " X" + x + " Z" + current_z + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (!has_x && has_y) {
+            // Just a y value
+            let distance = get_magnitude([last_xy[0], y], last_xy, already_found);
+            // Update the last y value
+            last_xy = [last_xy[0], y];
+            current_z += distance * wear_ratio;
+            let gcode_str = "G" + g_number + " Y" + y + " Z" + current_z + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else if (has_z) {
+            // Just a z value
+            let gcode_str = "G" + g_number + " Z" + current_z;
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        } else {
+            console.log("Found a line that is not a move: \n" + gcode_line);
+            let gcode_str = gcode_line + "\n";
+            return [gcode_str, last_xy, current_z, this_first_x_found, this_first_y_found];
+        }
+    }
+    
+
+    // if (gcode_line.substring(0, 2) === "G0" || gcode_line.substring(0, 2) == "G1") {
+    //     if (components[1].substring(0, 1) === "X") {
+    //         if (components[2].substring(0, 1) === "Y") {
+    //             console.log("Found a gcode move with x and y values");
+    //             return 4;
+    //         } else {
+    //             return 1;
+    //         }
+    //     } else {
+    //         if (components[2].substring(0, 1) === "Y") {
+    //             return 2;
+    //         } else {
+    //             return ;
+    //         }
+    //     }
+    // } else {
+    //     return 0;
+    // }
+}
+
+function is_move(gcode_line) {
+    // let components = gcode_line.split(" ");
+    if (gcode_line.substring(0, 2) === "G0") {
+        return 0;
+    } else if (gcode_line.substring(0, 2) == "G1") {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
 function get_xy(gcode_move) {
-    // let x = 0.0;
-    // let y = 0.0;
     let components = gcode_move.split(" ");
     const x = parseFloat(components[1].substring(1, components[1].length));
     const y = parseFloat(components[2].substring(1, components[2].length));
     return [x, y];
 }
-  
+
+function update_xy(gcode_line, last_xy) {
+    let x = -999999;
+    let has_x = false;
+    let y = -999999;
+    let has_y = false;
+    // if (gcode_line.substring(0, 2) === "G0") {
+    //     g_number = 0;
+    // } else if (gcode_line.substring(0, 2) === "G1") {
+    //     g_number = 1;
+    // } else {
+    //     console.log("did not find a g0 or g1 in line fed into correct_line");
+    // }
+    let components = gcode_line.split(" ");
+    for (let i = 0; i < components.length; i++) {
+        if (components[i].substring(0, 1) === "X") {
+            x = parseFloat(components[i].substring(1, components[i].length));
+            has_x = true;
+        } else if (components[i].substring(0, 1) === "Y") {
+            y = parseFloat(components[i].substring(1, components[i].length));
+            has_y = true;
+        }
+    }
+    if (has_x && has_y) {
+        last_xy = [x, y];
+    } else if (has_x && !has_y) {
+        last_xy = [x, last_xy[1]];
+    } else if (!has_x && has_y) {
+        last_xy = [last_xy[0], y];
+    }
+}
