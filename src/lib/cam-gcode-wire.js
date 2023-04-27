@@ -286,23 +286,24 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
 
     if (op.hookOperationEnd.length) gcode += op.hookOperationEnd;
 
-    let post_processed = rackGcodePostProcess(gcode, op.wearRatio);
+    let post_processed = rackGcodePostProcess(gcode, op.wearRatio, op.plungeRate);
     // done(gcode)
     done(post_processed)
 
 } // getWireGcodeFromOp
 
-function rackGcodePostProcess(gcode, wear_ratio) {
-    console.log("Original Gcode: \n", gcode);
-    const critcal_distance_threshold_for_segmentation = 0.05;
+// function rackGcodePostProcess(gcode, wear_ratio, plunge_feed) {
+//     console.log("Original Gcode: \n", gcode);
+//     // const critcal_distance_threshold_for_segmentation = 0.05;
     
-    const rapid_feedrate_for_G0_commands = 1200;
-    let plunges_reordered = findAndReorderPlunges(gcode, wear_ratio);
-    console.log("Plunges Reordered: \n", plunges_reordered);
-    return plunges_reordered;
-} 
+//     const rapid_feedrate_for_G0_commands = 1200;
+//     let plunges_reordered = findAndReorderPlunges(gcode, wear_ratio, plunge_feed);
+//     console.log("Plunges Reordered: \n", plunges_reordered);
+//     return plunges_reordered;
+// } 
 
-function findAndReorderPlunges(gcode, wear_ratio) {
+// function findAndReorderPlunges(gcode, wear_ratio, plunge_feed) {
+function rackGcodePostProcess(gcode, wear_ratio, plunge_feed_rate) {
     // const plunge_initiation_string = "; plunge";
     // const lines = gcode.split('\n');
 
@@ -318,52 +319,80 @@ function findAndReorderPlunges(gcode, wear_ratio) {
     //     update_xy(lines[i], last_xy);
     // }
     // console.log("Plunges: \n", plunges);
-    let plunges = find_plunges(gcode);
+    console.log("Original Gcode: \n", gcode);
+    let plunges = find_plunges(gcode, plunge_feed_rate);
     let subdivided = subdivide_moves(gcode, 0.1);
     console.log("Subdivided: \n", subdivided);
     let z_added = add_z(subdivided, wear_ratio);
     console.log("Z Added: \n", z_added);
-    let plunges_at_begining = "";
-    let plunges_added_back = false;
-    const line_to_add_plunges_before = "; Path 0 \n";
-    let z_added_lines = z_added.split('\n');
-    for (let i = 0; i < z_added_lines.length; i++) {
-        if (z_added_lines[i].substring(0, 8) === line_to_add_plunges_before.substring(0, 8)) {
-            console.log("Found the Path 0 line");
-            if (!plunges_added_back) {
-                plunges_at_begining += plunges + line_to_add_plunges_before + "\n";
-            } else {
-                console.log("MAJOR ERROR: Found the Path 0 line twice");
-                plunges_at_begining += z_added_lines[i] + "\n";
-            }
-        } else {
-            plunges_at_begining += z_added_lines[i] + "\n";
-        }
-    }
-    return plunges_at_begining;
+    let plunges_added = add_plunges(z_added, plunges);
+    // let plunges_added = "";
+    // let plunges_added_back = false;
+    // const line_to_add_plunges_before = "; Path 0 \n";
+    // let z_added_lines = z_added.split('\n');
+    // for (let i = 0; i < z_added_lines.length; i++) {
+    //     if (z_added_lines[i].substring(0, 8) === line_to_add_plunges_before.substring(0, 8)) {
+    //         console.log("Found the Path 0 line");
+    //         if (!plunges_added_back) {
+    //             plunges_at_begining += plunges + line_to_add_plunges_before + "\n";
+    //         } else {
+    //             console.log("MAJOR ERROR: Found the Path 0 line twice");
+    //             plunges_at_begining += z_added_lines[i] + "\n";
+    //         }
+    //     } else {
+    //         plunges_at_begining += z_added_lines[i] + "\n";
+    //     }
+    // }
+    console.log("Plunged added to top: \n", plunges_added);
+    return plunges_added;
 }
 
-function find_plunges(gcode) {
+function add_plunges(gcode, plunges) {
+    let plunges_added = "";
+    let plunges_added_back = false;
+    const line_to_add_plunges_before = "; Path 0 \n";
+    let gcode_lines = gcode.split('\n');
+    for (let i = 0; i < gcode_lines.length; i++) {
+        if (gcode_lines[i].substring(0, 8) === line_to_add_plunges_before.substring(0, 8)) {
+            console.log("Found the Path 0 line");
+            if (!plunges_added_back) {
+                plunges_added += plunges + line_to_add_plunges_before + "\n";
+            } else {
+                console.log("MAJOR ERROR: Found the Path 0 line twice");
+                plunges_added += gcode_lines[i] + "\n";
+            }
+        } else {
+            plunges_added += gcode_lines[i] + "\n";
+        }
+    }
+    return plunges_added;
+}
+
+function find_plunges(gcode, plunge_feed_rate) {
+    console.log("Plunge Feed: ", plunge_feed_rate);
+    const plunge_retract_dist = 5.0;
+    const plunge_depth = 1.0;
+    const plunge_travel_speed = 100;
     const plunge_initiation_string = "; plunge";
     const lines = gcode.split('\n');
 
     let plunges = "";
-    let last_xy = [0, 0];
+    let last_point = [0, 0];
+    let plunge_counter = 1;
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].substring(0, 8) === plunge_initiation_string) {
             console.log("Found a plunge");
-            // Retract z before move to plunge start
-            // let first_move = {g: 0, x: null, y: null, z: 1.0, f: null};
-            // plunges += generate_gcode_move({g: 0, x: null, y: null, z: 1.0, f: null});
-            plunges += move_as_str({g: 0, x: null, y: null, z: 1.0, f: null});
+            // Retract
+            plunges += "; plunge " + plunge_counter + "\n";
+            plunges += move_as_str({g: 1, x: null, y: null, z: plunge_retract_dist, f: plunge_feed_rate});
             // Move to plunge start
-            plunges += move_as_str({g: 0, x: last_xy[0], y: last_xy[1], z: null, f: null});
+            plunges += move_as_str({g: 1, x: last_point[0], y: last_point[1], z: null, f: plunge_travel_speed});
             // plunges += "G0 Z1.0\n";
             // plunges += "G0 X" + last_xy[0] + " Y" + last_xy[1] + "\n";
             // Do plunge
-            plunges += lines[i] + "\n" + lines[i + 1] + "\n";
+            plunges += move_as_str({g: 1, x: null, y: null, z: plunge_depth, f: plunge_feed_rate}) + "\n";
         } 
-        update_xy(lines[i], last_xy);
+        update_xy(lines[i], last_point);
     }
     return plunges;
 }
@@ -372,8 +401,6 @@ function add_z(gcode, wear_ratio) {
     let last_xy = [null, null];
     let lines = gcode.split('\n');
     let current_z = 0;
-    // let first_x_found = false;
-    // let first_y_found = false;
 
     let new_gcode = "";
     for (let i = 0; i < lines.length; i++) {
@@ -590,20 +617,30 @@ function get_points_on_1D_line(start, end, spacing) {
 }
 
 function update_xy(gcode_line, last_xy) {
-    // let has_x = false;
-    // let has_y = false;
-    let components = gcode_line.split(" ");
-    for (let i = 0; i < components.length; i++) {
-      if (components[i].substring(0, 1) === "X") {
-        let x = parseFloat(components[i].substring(1, components[i].length));
-        last_xy[0] = x;
-        // has_x = true;
-      } else if (components[i].substring(0, 1) === "Y") {
-        let y = parseFloat(components[i].substring(1, components[i].length));
-        last_xy[1] = y;
+    let line = parse_move(gcode_line);
+
+    if (line.x !== null) {
+        // x = parseFloat(components[i].substring(1, components[i].length));
+        last_xy[0] = line.x;
+    } 
+    if (line.y !== null) {
+        // let y = parseFloat(components[i].substring(1, components[i].length));
+        last_xy[1] = line.y;
         // has_y = true;
-      }
     }
+
+    // let components = gcode_line.split(" ");
+    // for (let i = 0; i < components.length; i++) {
+    //   if (components[i].substring(0, 1) === "X") {
+    //     let x = parseFloat(components[i].substring(1, components[i].length));
+    //     last_xy[0] = x;
+    //     // has_x = true;
+    //   } else if (components[i].substring(0, 1) === "Y") {
+    //     let y = parseFloat(components[i].substring(1, components[i].length));
+    //     last_xy[1] = y;
+    //     // has_y = true;
+    //   }
+    // }
     // console.log(last_xy);
 }
 
