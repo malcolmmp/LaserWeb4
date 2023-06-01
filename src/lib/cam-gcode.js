@@ -152,7 +152,7 @@ export function getGcode(settings, documents, operations, documentCacheHolder, s
 
                         invokeWebWorker(require('worker-loader!./workers/cam-lathe.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)
 
-                    } else if (op.type.substring(0, 21) === 'Virtual Wire ECM Cut ') {
+                    } else if (op.type.substring(0, 20) === 'Virtual Wire EDM Cut') {
                         showAlert("Processing Virtual Wire EDM Cut...")
                         invokeWebWorker(require('worker-loader!./workers/cam-wire.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)
                     } else {

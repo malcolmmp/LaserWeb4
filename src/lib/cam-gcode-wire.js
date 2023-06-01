@@ -187,10 +187,10 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
             ok = false;
         }
     } else {
-        if (op.millEndZ >= op.millStartZ) {
-            showAlert("millEndZ must be < millStartZ", "danger");
-            ok = false;
-        }
+        // if (op.millEndZ >= op.millStartZ) {
+        //     showAlert("millEndZ must be < millStartZ", "danger");
+        //     ok = false;
+        // }
         if (op.type !== 'Mill Cut' && op.toolDiameter <= 0) {
             showAlert("Tool Diameter must be greater than 0", "danger");
             ok = false;
@@ -219,21 +219,21 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
         tabGeometry = offset(tabGeometry, op.toolDiameter / 2 * mmToClipperScale);
 
     let camPaths = [];
-    if (op.type === 'Virtual Wire ECM Pocket') {
+    if (op.type === 'Virtual Wire EDM Pocket') {
         if (op.margin)
             geometry = offset(geometry, -op.margin * mmToClipperScale);
         camPaths = pocket(geometry, op.toolDiameter * mmToClipperScale, op.stepOver, op.direction === 'Climb');
-    } else if (op.type === 'Virtual Wire ECM Cut') {
+    } else if (op.type === 'Virtual Wire EDM Cut') {
         camPaths = cut(geometry, openGeometry, op.direction === 'Climb');
-    } else if (op.type === 'Virtual Wire ECM Cut Inside') {
+    } else if (op.type === 'Virtual Wire EDM Cut Inside') {
         if (op.margin)
             geometry = offset(geometry, -op.margin * mmToClipperScale);
         camPaths = insideOutside(geometry, op.toolDiameter * mmToClipperScale, true, op.cutWidth * mmToClipperScale, op.stepOver, op.direction === 'Climb', true);
-    } else if (op.type === 'Virtual Wire ECM Cut Outside') {
+    } else if (op.type === 'Virtual Wire EDM Cut Outside') {
         if (op.margin)
             geometry = offset(geometry, op.margin * mmToClipperScale);
         camPaths = insideOutside(geometry, op.toolDiameter * mmToClipperScale, false, op.cutWidth * mmToClipperScale, op.stepOver, op.direction === 'Climb', true);
-    } else if (op.type === 'Virtual Wire ECM V Carve') {
+    } else if (op.type === 'Virtual Wire EDM V Carve') {
         camPaths = vCarve(geometry, op.toolAngle, op.passDepth * mmToClipperScale);
     }
 
@@ -252,22 +252,25 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
 
     let gcode =
         "\r\n;" +
-        "\r\n; Operation:    " + opIndex +
-        "\r\n; Type:         " + op.type +
-        "\r\n; Paths:        " + camPaths.length +
-        "\r\n; Direction:    " + op.direction +
-        "\r\n; Rapid Z:      " + op.millRapidZ +
-        "\r\n; Start Z:      " + op.millStartZ +
-        "\r\n; End Z:        " + op.millEndZ +
-        "\r\n; Pass Depth:   " + op.passDepth +
-        "\r\n; Plunge rate:  " + op.plungeRate + ' ' + settings.toolFeedUnits +
-        "\r\n; Cut rate:     " + op.cutRate + ' ' + settings.toolFeedUnits +
-        "\r\n; Wear Ratio:   " + op.wearRatio +
+        "\r\n; Operation:     " + opIndex +
+        "\r\n; Type:          " + op.type +
+        "\r\n; Paths:         " + camPaths.length +
+        // "\r\n; Direction:     " + op.direction +
+        "\r\n; Rapid Z:       " + op.millRapidZ +
+        "\r\n; Start Z:       " + op.millStartZ +
+        // "\r\n; End Z:         " + op.millEndZ +
+        // "\r\n; Pass Depth:    " + op.passDepth +
+        "\r\n; Cut Start Z:   " + op.cutStartZ +
+        "\r\n; Plunge rate:   " + op.plungeRate + ' ' + settings.toolFeedUnits +
+        "\r\n; Cut rate:      " + op.cutRate + ' ' + settings.toolFeedUnits +
+        "\r\n; Travel Speed:  " + op.travelSpeed + ' ' + settings.toolFeedUnits +
+        "\r\n; Tool Diameter: " + op.toolDiameter +
+        "\r\n; Wear Ratio:    " + op.wearRatio +
         "\r\n;\r\n";
 
     if (op.hookOperationStart.length) gcode += op.hookOperationStart;
 
-    console.log(typeof op.ramp);
+    // console.log(typeof op.ramp);
     gcode += getWireGcode({
         paths: camPaths,
         ramp: false,
@@ -277,20 +280,24 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
         offsetY: 0,
         decimal: 3,
         topZ: op.millStartZ,
-        botZ: op.millEndZ,
+        // botZ: op.millEndZ,
+        // botZ: -op.passDepth,
+        botZ: op.cutStartZ,
         safeZ: op.millRapidZ,
-        passDepth: op.passDepth,
+        // passDepth: op.passDepth,
+        passDepth: -op.cutStartZ,
         plungeFeed: op.plungeRate * feedScale,
         cutFeed: op.cutRate * feedScale,
         tabGeometry: op.type === 'Mill V Carve' ? [] : tabGeometry,
         tabZ: -op.tabDepth,
-        toolSpeed: op.toolSpeed
+        toolSpeed: 0,
     });
 
     if (op.hookOperationEnd.length) gcode += op.hookOperationEnd;
 
     // let post_processed = rackGcodePostProcess(gcode, op.wearRatio, op.plungeRate, op.millStartZ, op.millRapidZ);
-    let post_processed = rackRoboPostProcess(gcode, op.wearRatio, op.plungeRate, op.millStartZ, op.millRapidZ, op.passDepth);
+    // let post_processed = rackRoboPostProcess(gcode, op.wearRatio, op.plungeRate, op.millStartZ, op.millRapidZ, -op.passDepth, op.travelSpeed);
+    let post_processed = rackRoboPostProcess(gcode, op.wearRatio, op.plungeRate, op.millStartZ, op.millRapidZ, op.cutStartZ, op.travelSpeed);
     done(post_processed)
     // done(gcode)
 

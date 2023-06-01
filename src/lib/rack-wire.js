@@ -1,5 +1,19 @@
 
-export function rackRoboPostProcess(gcode, wear_ratio, plunge_feed_rate, start_z, rapid_z, pass_depth) {
+// export function checkRangeNotEqualToLeft(min, max) {
+//     return {
+//         check: (v) => {
+//             if (isFinite(v)) {
+//                 return v > min && v <= max;
+//             } else if (isObject(v) && v.hasOwnProperty('min') && v.hasOwnProperty('max')) {
+//                 return (v.min >= min && v.min <= max) && (v.max >= min && v.max <= max)
+//             }
+//         },
+//         error: 'Must be in range (' + min + ' , ' + max + ']',
+//     }
+// }
+
+
+export function rackRoboPostProcess(gcode, wear_ratio, plunge_feed_rate, start_z, rapid_z, pass_depth, travel_speed_xy) {
     console.log("Original Gcode: \n", gcode);
     let cuts = find_cuts(gcode);
     console.log("Cuts: ");
@@ -9,29 +23,15 @@ export function rackRoboPostProcess(gcode, wear_ratio, plunge_feed_rate, start_z
     console.log("Subdivided Cuts: ");
     log_array_of_strings(subdiv_cuts);
     console.log("Z Added: \n");
-    let cuts_with_z = add_z(subdiv_cuts, wear_ratio, -pass_depth);
+    let cuts_with_z = add_z(subdiv_cuts, wear_ratio, pass_depth);
     // log_array_of_strings(z_added);
     let plunges = find_plunges_cuts_removed(cuts.the_rest);
     console.log("Plunges: \n");
     log_array_of_strings(plunges.plunges);
     console.log("Plunges Removed: \n", plunges.the_rest);
-    let plunges_with_feeds = add_plunge_feeds(plunges.plunges, plunge_feed_rate, 1000, 1000);
+    let plunges_with_feeds = add_plunge_feeds(plunges.plunges, plunge_feed_rate, travel_speed_xy, 10);
     let plunges_cuts_added = put_cuts_and_plunges(cuts_with_z, plunges_with_feeds, plunges.the_rest);
     console.log("Plunges and Cuts Added: \n", plunges_cuts_added);
-    // let plunge = find_plunges(gcode, plunge_feed_rate);
-    // console.log("Plunges: \n", plunge.gcode);
-    // let retract = find_and_remove_retracts(gcode, start_z, rapid_z);
-    // // console.log("Retracts Removed: \n", retract.retracts_removed);
-    // // console.log("Retracts: \n", retract.retracts);
-    // let subdivided = subdivide_moves(retract.retracts_removed, 0.1);
-    // // console.log("Subdivided: \n", subdivided);
-    // let z_added = add_z(subdivided, wear_ratio);
-    // // console.log("Z Added: \n", z_added);
-    // let retracts_added = add_back_retracts(z_added, retract.retracts);
-    // // console.log("Retracts added back: \n", retracts_added);
-    // let plunges_added = add_plunges(retracts_added, plunge.gcode);
-    // // console.log("Plunges added to top: \n", plunges_added);
-    // test_proper_z(plunges_added, retract.count);
     return plunges_cuts_added;
 }
 

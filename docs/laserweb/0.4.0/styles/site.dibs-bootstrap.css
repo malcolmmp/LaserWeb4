@@ -4521,17 +4521,25 @@ a.list-group-item {
     border-bottom-color: #faeacc; }
 
 .panel-danger {
-  border-color: #ebccd1; }
+  /* border-color: #ebccd1; */
+  border-color: #7F7F7F; 
+}
   .panel-danger > .panel-heading {
     color: #b94a48;
     background-color: #f2dede;
-    border-color: #ebccd1; }
+    /* border-color: #ebccd1; */
+    border-color: #7F7F7F; 
+  }
     .panel-danger > .panel-heading + .panel-collapse .panel-body {
-      border-top-color: #ebccd1; }
+      /* border-top-color: #ebccd1;  */
+      border-top-color: #7F7F7F; 
+    }
     .panel-danger > .panel-heading > .dropdown .caret {
       border-color: #b94a48 transparent; }
   .panel-danger > .panel-footer + .panel-collapse .panel-body {
-    border-bottom-color: #ebccd1; }
+    /* border-bottom-color: #ebccd1; */
+    border-bottom-color: #7F7F7F; 
+  }
 
 .panel-info {
   border-color: #bce9f1; }

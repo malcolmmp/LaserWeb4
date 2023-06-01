@@ -3218,8 +3218,8 @@ fieldset[disabled] .btn-success.focus {
 }
 .btn-info {
   color: #fff;
-  background-color: #5bc0de;
-  border-color: #5bc0de;
+  background-color: #FF5900;
+  border-color: #FF5900;
 }
 .btn-info:focus,
 .btn-info.focus {
@@ -3266,11 +3266,11 @@ fieldset[disabled] .btn-info:focus,
 .btn-info.disabled.focus,
 .btn-info[disabled].focus,
 fieldset[disabled] .btn-info.focus {
-  background-color: #5bc0de;
-  border-color: #5bc0de;
+  background-color: #FF5900;
+  border-color: #FF5900;
 }
 .btn-info .badge {
-  color: #5bc0de;
+  color: #FF5900;
   background-color: #fff;
 }
 .btn-warning {
@@ -6842,9 +6842,9 @@ button.close {
   filter: none;
 }
 .btn-info {
-  background-image: -webkit-linear-gradient(#74cae3, #5bc0de 60%, #4ab9db);
-  background-image: -o-linear-gradient(#74cae3, #5bc0de 60%, #4ab9db);
-  background-image: linear-gradient(#74cae3, #5bc0de 60%, #4ab9db);
+  background-image: -webkit-linear-gradient(#74cae3, #FF5900 60%, #4ab9db);
+  background-image: -o-linear-gradient(#74cae3, #FF5900 60%, #4ab9db);
+  background-image: linear-gradient(#74cae3, #FF5900 60%, #4ab9db);
   background-repeat: no-repeat;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff74cae3', endColorstr='#ff4ab9db', GradientType=0);
   filter: none;

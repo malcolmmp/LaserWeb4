@@ -6,6 +6,7 @@ import arrayMove from 'array-move'
 
 import { GlobalStore } from '../index';
 
+// Modified for Rack Robotics
 export const OPERATION_INITIALSTATE = {
     id: '',
     name: '',
@@ -13,14 +14,15 @@ export const OPERATION_INITIALSTATE = {
     documents: [],
     tabDocuments: [],
     expanded: false,
-    type: 'Laser Cut',
+    // type: 'Laser Cut',
+    type: 'Virtual Wire EDM Cut',
     filterFillColor: null,
     filterStrokeColor: null,
     direction: 'Conventional',
     laserPower: 100,
     laserPowerRange: { min: 0, max: 100 },
     laserDiameter: 0,
-    toolDiameter: 0,
+    toolDiameter: 1.5,
     lineDistance: 0,
     lineAngle: 0,
     margin: 0,
@@ -28,15 +30,19 @@ export const OPERATION_INITIALSTATE = {
     cutWidth: 0,
     toolSpeed: 0,
     stepOver: 40,
-    passDepth: 0,
+    passDepth: 2,
     startHeight: '',
-    millRapidZ: 0,
+    millRapidZ: 1000,
     millStartZ: 0,
     millEndZ: 0,
+    // Added for Wire EDM
+    wearRatio: 0.03,
+    //Added for Wire EDM
+    travelSpeed: 1000,
     segmentLength: 0,
     tabDepth: 0,
-    plungeRate: 0,
-    cutRate: 0,
+    plungeRate: 20,
+    cutRate: 40,
     overScan: 0,
     toolAngle: 0,
     ramp: false,

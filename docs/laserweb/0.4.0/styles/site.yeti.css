@@ -1342,7 +1342,7 @@ a.text-success:focus {
   color: #358753;
 }
 .text-info {
-  color: #5bc0de;
+  color: #FF5900;
 }
 a.text-info:hover,
 a.text-info:focus {
@@ -3219,8 +3219,8 @@ fieldset[disabled] .btn-success.focus {
 }
 .btn-info {
   color: #fff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #FF5900;
+  border-color: #FF5900;
 }
 .btn-info:focus,
 .btn-info.focus {
@@ -3267,11 +3267,11 @@ fieldset[disabled] .btn-info:focus,
 .btn-info.disabled.focus,
 .btn-info[disabled].focus,
 fieldset[disabled] .btn-info.focus {
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #FF5900;
+  border-color: #FF5900;
 }
 .btn-info .badge {
-  color: #5bc0de;
+  color: #FF5900;
   background-color: #fff;
 }
 .btn-warning {
@@ -6845,8 +6845,8 @@ button.close {
   background-color: #388f58;
 }
 .btn-group .dropdown-toggle.btn-info ~ .dropdown-menu {
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #FF5900;
+  border-color: #FF5900;
 }
 .btn-group .dropdown-toggle.btn-info ~ .dropdown-menu > li > a {
   color: #fff;

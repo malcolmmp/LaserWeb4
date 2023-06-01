@@ -414,10 +414,10 @@ class FloatingControls extends React.Component {
         return (
             <Draggable bounds="parent" position={constraint(this.state.drag ? this.state.drag : { x, y })} onStart={detach} onStop={this.handleStop} onDrag={this.handleDrag} disabled={hidden} handle=".handle">
                 <div style={{ position: "absolute", pointerEvents: hidden ? 'none' : 'all', display: hidden ? 'none' : 'block' }}>
-                    <table style={{ border: '2px solid #ccc', margin: '1px', padding: '2px', backgroundColor: '#eee', }} className="floating-controls" >
+                    <table style={{ border: '2px solid #ccc', margin: '1px', padding: '2px', backgroundColor: '#222327', }} className="floating-controls" >
                         <tbody>
                             <tr>
-                                <td title="Drag to position. DblClick to restore"><span className="handle" onDoubleClick={reattach} style={{ color: this.state.drag ? '#00F' : '#000' }}><Icon name="arrows" /></span></td>
+                                <td title="Drag to position. DblClick to restore"><span className="handle" onDoubleClick={reattach} style={{ color: this.state.drag ? '#fff' : '#333' }}><Icon name="arrows" /></span></td>
                                 <td>Min</td>
                                 <td>Center</td>
                                 <td>Max</td>
@@ -428,19 +428,19 @@ class FloatingControls extends React.Component {
                                     <table>
                                     <tbody>
                                     <tr>
-                                    <td><button className="btn btn-xs" onClick={ e => { this.setZeroX(true); this.setZeroY(false); } } title="Align northwest of origin">&#x2198;</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => this.setZeroY(false) } title="Align north of origin">&#x2193;</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => { this.setZeroX(false); this.setZeroY(false); } } title="Align northeast of origin">&#x2199;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => { this.setZeroX(true); this.setZeroY(false); } } title="Align northwest of origin">&#x2198;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => this.setZeroY(false) } title="Align north of origin">&#x2193;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => { this.setZeroX(false); this.setZeroY(false); } } title="Align northeast of origin">&#x2199;</button></td>
                                     </tr>
                                     <tr>
-                                    <td><button className="btn btn-xs" onClick={ e => this.setZeroX(true) } title="Align west of origin">&#x2192;</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => this.setCenterXY() } title="Center on origin">+</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => this.setZeroX(false) } title="Align east of origin">&#x2190;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => this.setZeroX(true) } title="Align west of origin">&#x2192;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => this.setCenterXY() } title="Center on origin">+</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => this.setZeroX(false) } title="Align east of origin">&#x2190;</button></td>
                                     </tr>
                                     <tr>
-                                    <td><button className="btn btn-xs" onClick={ e => { this.setZeroX(true); this.setZeroY(true); } } title="Align southwest of origin">&#x2197;</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => this.setZeroY(true) } title="Align south of origin">&#x2191;</button></td>
-                                    <td><button className="btn btn-xs" onClick={ e => { this.setZeroX(false); this.setZeroY(true); } } title="Align southeast of origin">&#x2196;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => { this.setZeroX(true); this.setZeroY(true); } } title="Align southwest of origin">&#x2197;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => this.setZeroY(true) } title="Align south of origin">&#x2191;</button></td>
+                                    <td><button className="btn btn-xs btn-translate-path" onClick={ e => { this.setZeroX(false); this.setZeroY(true); } } title="Align southeast of origin">&#x2196;</button></td>
                                     </tr>
                                     </tbody>
                                     </table>
@@ -767,7 +767,8 @@ class WorkspaceContent extends React.Component {
             if (this.props.settings.showMachine || this.props.settings.machineAEnabled && this.props.workspace.showRotary)
                 gl.clearColor(.8, .8, .8, 1);
             else
-                gl.clearColor(1, 1, 1, 1);
+                // gl.clearColor(1, 1, 1, 1);
+                gl.clearColor(0.33, 0.33, 0.33, 1);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
             gl.enable(gl.BLEND);

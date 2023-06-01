@@ -128,7 +128,8 @@ class DocumentLabel extends React.Component {
         let {documents} = this.props;
         let style;
         if (this.props.object.selected)
-            style = { userSelect: 'none', cursor: 'grab', textDecoration: 'bold', color: '#FFF', paddingLeft: 5, paddingRight: 5, paddingBottom: 3, backgroundColor: '#337AB7', border: '1px solid', borderColor: '#2e6da4', borderRadius: 2 };
+            //style = { userSelect: 'none', cursor: 'grab', textDecoration: 'bold', color: '#FFF', paddingLeft: 5, paddingRight: 5, paddingBottom: 3, backgroundColor: '#337AB7', border: '1px solid', borderColor: '#2e6da4', borderRadius: 2 };
+            style = { userSelect: 'none', cursor: 'grab', textDecoration: 'bold', color: '#FFF', paddingLeft: 5, paddingRight: 5, paddingBottom: 3, backgroundColor: '#FF7332', border: '1px solid', borderColor: '#2e6da4', borderRadius: 2 };
         else
             style = { userSelect: 'none', cursor: 'copy', paddingLeft: 5, paddingRight: 5, paddingBottom: 3 };
         let dragDiv;
@@ -137,7 +138,8 @@ class DocumentLabel extends React.Component {
                 <div style={{ position: 'absolute', zIndex: 1000, left: this.dragX, top: this.dragY, pointerEvents: 'none' }}>
                     <div style={{ position: 'relative', transform: 'translate(-50%,-50%)' }}>
                         {documents.filter(d => isSelected(documents, d)).map(doc =>
-                            <div key={doc.id} style={{ color: '#FFF', backgroundColor: '#337AB7' }}>{doc.name}</div>)}
+                            // <div key={doc.id} style={{ color: '#FFF', backgroundColor: '#337AB7' }}>{doc.name}</div>)}
+                            <div key={doc.id} style={{ color: '#FFF', backgroundColor: '#FF7332' }}>{doc.name}</div>)}
                     </div>
                 </div>
             );

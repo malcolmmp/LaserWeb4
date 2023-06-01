@@ -1378,7 +1378,7 @@ a.bg-success:focus {
   background-color: #449d44;
 }
 .bg-info {
-  background-color: #5bc0de;
+  background-color: #FF5900;
 }
 a.bg-info:hover,
 a.bg-info:focus {
@@ -2384,7 +2384,7 @@ table th[class*="col-"] {
 .table-hover > tbody > tr.info:hover > td,
 .table-hover > tbody > tr:hover > .info,
 .table-hover > tbody > tr.info:hover > th {
-  background-color: #46b8da;
+  background-color: #FF5900;
 }
 .table > thead > tr > td.warning,
 .table > tbody > tr > td.warning,
@@ -3219,7 +3219,7 @@ fieldset[disabled] .btn-success.focus {
 }
 .btn-info {
   color: #fff;
-  background-color: #5bc0de;
+  background-color: #FF5900;
   border-color: transparent;
 }
 .btn-info:focus,
@@ -3267,11 +3267,11 @@ fieldset[disabled] .btn-info:focus,
 .btn-info.disabled.focus,
 .btn-info[disabled].focus,
 fieldset[disabled] .btn-info.focus {
-  background-color: #5bc0de;
+  background-color: #FF5900;
   border-color: transparent;
 }
 .btn-info .badge {
-  color: #5bc0de;
+  color: #FF5900;
   background-color: #fff;
 }
 .btn-warning {
@@ -3333,7 +3333,7 @@ fieldset[disabled] .btn-warning.focus {
 }
 .btn-danger {
   color: #fff;
-  background-color: #d9534f;
+  background-color: #FF5900;
   border-color: transparent;
 }
 .btn-danger:focus,
@@ -3385,7 +3385,7 @@ fieldset[disabled] .btn-danger.focus {
   border-color: transparent;
 }
 .btn-danger .badge {
-  color: #d9534f;
+  color: #FF5900;
   background-color: #fff;
 }
 .btn-link {
@@ -4885,7 +4885,7 @@ a.label:focus {
   background-color: #ec971f;
 }
 .label-danger {
-  background-color: #d9534f;
+  background-color: #FF5900;
 }
 .label-danger[href]:hover,
 .label-danger[href]:focus {
@@ -5342,7 +5342,7 @@ button.list-group-item-info:hover,
 a.list-group-item-info:focus,
 button.list-group-item-info:focus {
   color: #EBEBEB;
-  background-color: #46b8da;
+  background-color: #FF5900;
 }
 a.list-group-item-info.active,
 button.list-group-item-info.active,
@@ -5385,7 +5385,7 @@ button.list-group-item-warning.active:focus {
 }
 .list-group-item-danger {
   color: #EBEBEB;
-  background-color: #d9534f;
+  background-color: #FF5900;
 }
 a.list-group-item-danger,
 button.list-group-item-danger {
@@ -5750,14 +5750,14 @@ button.list-group-item-danger.active:focus {
 }
 .panel-danger > .panel-heading {
   color: #EBEBEB;
-  background-color: #d9534f;
+  background-color: #FF5900;
   border-color: transparent;
 }
 .panel-danger > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: transparent;
 }
 .panel-danger > .panel-heading .badge {
-  color: #d9534f;
+  color: #FF5900;
   background-color: #EBEBEB;
 }
 .panel-danger > .panel-footer + .panel-collapse > .panel-body {
