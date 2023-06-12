@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LaserWeb/LaserWeb4.git"
+    "url": "git+https://github.com/Rottschaferanders/LaserWeb4.git"
   },
   "keywords": [
     "laser",
@@ -35,7 +35,7 @@
   ],
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/LaserWeb/LaserWeb4/issues"
+    "url": "https://github.com/Rottschaferanders/LaserWeb4/issues"
   },
   "homepage": "https://laserweb.yurl.ch",
   "devDependencies": {

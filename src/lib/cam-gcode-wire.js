@@ -270,6 +270,8 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
 
     if (op.hookOperationStart.length) gcode += op.hookOperationStart;
 
+    console.log("Made it to the getWireGcode function");
+
     // console.log(typeof op.ramp);
     gcode += getWireGcode({
         paths: camPaths,
@@ -292,6 +294,7 @@ export function getWireGcodeFromOp(settings, opIndex, op, geometry, openGeometry
         tabZ: -op.tabDepth,
         toolSpeed: 0,
     });
+    console.log("Made it to to the end of the getWireGcode function");
 
     if (op.hookOperationEnd.length) gcode += op.hookOperationEnd;
 
