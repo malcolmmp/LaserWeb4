@@ -1,18 +1,18 @@
-2023-06-01 19:13:25  
-2023-06-01 19:13:25 ***************************************************************
-2023-06-01 19:13:25         ---- LaserWeb Comm Server 4.1.000 ----        
-2023-06-01 19:13:25 ***************************************************************
-2023-06-01 19:13:25   Use  http://192.168.4.56:8000 to connect to this server.
-2023-06-01 19:13:25  
-2023-06-01 19:13:25 * Updates: 
-2023-06-01 19:13:25   Remember to check the commit log on
-2023-06-01 19:13:25   https://github.com/LaserWeb/lw.comm-server/commits/master
-2023-06-01 19:13:25   regularly, to know about updates and fixes, and then when ready
-2023-06-01 19:13:25   update accordingly by running git pull
-2023-06-01 19:13:25  
-2023-06-01 19:13:25 * Support: 
-2023-06-01 19:13:25   If you need help / support, come over to 
-2023-06-01 19:13:25   https://forum.makerforums.info/c/laserweb-cncweb/78
-2023-06-01 19:13:25 ***************************************************************
-2023-06-01 19:13:25  
-2023-06-01 19:13:25 Server binding to all local IP addresses on port: 8000
+2023-06-20 03:02:43  
+2023-06-20 03:02:43 ***************************************************************
+2023-06-20 03:02:43         ---- LaserWeb Comm Server 4.1.000 ----        
+2023-06-20 03:02:43 ***************************************************************
+2023-06-20 03:02:43   Use  http://192.168.4.56:8000 to connect to this server.
+2023-06-20 03:02:43  
+2023-06-20 03:02:43 * Updates: 
+2023-06-20 03:02:43   Remember to check the commit log on
+2023-06-20 03:02:43   https://github.com/LaserWeb/lw.comm-server/commits/master
+2023-06-20 03:02:43   regularly, to know about updates and fixes, and then when ready
+2023-06-20 03:02:43   update accordingly by running git pull
+2023-06-20 03:02:43  
+2023-06-20 03:02:43 * Support: 
+2023-06-20 03:02:43   If you need help / support, come over to 
+2023-06-20 03:02:43   https://forum.makerforums.info/c/laserweb-cncweb/78
+2023-06-20 03:02:43 ***************************************************************
+2023-06-20 03:02:43  
+2023-06-20 03:02:43 Server binding to all local IP addresses on port: 8000
