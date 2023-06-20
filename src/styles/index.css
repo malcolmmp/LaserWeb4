@@ -21,10 +21,19 @@ a {
     color: #FF5900;
 }
 
-.alert-sucess {
+.well {
+    background-color: #474749;
+    border-color: #474749;
+}
+
+.alert-success {
     color: #FF5900;
     background-color: #7F7F7F;
     border-color: #7F7F7F;
+}
+
+.btn-xs {
+    color: white !important;
 }
 
 .btn-danger {
@@ -397,11 +406,20 @@ h5.header {font-weight: bold}
 .commandHistory .toolbar { padding-right: 4px; white-space:nowrap;  }
 .commandHistory code {display:block;  font-size: 0.7em; background: none; color: white; border-bottom: 1px dotted #55555a; font-family: 'Inconsolata', monospace;  padding-left:1em; margin-left: 0.25em }
 .commandHistory code i {margin-left: -1em}
-.commandHistory code.danger {background: #fee}
+.commandHistory code.danger {
+    background: #fee;
+    color: #000;
+}
 .commandHistory code.danger i {color: red}
-.commandHistory code.warning {background: #ffa}
+.commandHistory code.warning {
+    background: #ffa;
+    color: #000;
+}
 .commandHistory code.warning i {color: #f90}
-.commandHistory code.success {background: #efe}
+.commandHistory code.success {
+    background: #efe;
+    color: #000;
+}
 .commandHistory code.success i {color: #0a0}
 .commandHistory details {display:inline-block}
 
