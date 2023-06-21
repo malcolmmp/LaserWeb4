@@ -1,37 +1,22 @@
-
-// export function checkRangeNotEqualToLeft(min, max) {
-//     return {
-//         check: (v) => {
-//             if (isFinite(v)) {
-//                 return v > min && v <= max;
-//             } else if (isObject(v) && v.hasOwnProperty('min') && v.hasOwnProperty('max')) {
-//                 return (v.min >= min && v.min <= max) && (v.max >= min && v.max <= max)
-//             }
-//         },
-//         error: 'Must be in range (' + min + ' , ' + max + ']',
-//     }
-// }
-
-
 export function rackRoboPostProcess(gcode, wear_ratio, plunge_feed_rate, start_z, rapid_z, pass_depth, travel_speed_xy) {
-    console.log("Original Gcode: \n", gcode);
+    // console.log("Original Gcode: \n", gcode);
     let cuts = find_cuts(gcode);
-    console.log("Cuts: ");
-    log_array_of_strings(cuts.cut_blocks);
-    console.log("The rest: \n", cuts.the_rest);
+    // console.log("Cuts: ");
+    // log_array_of_strings(cuts.cut_blocks);
+    // console.log("The rest: \n", cuts.the_rest);
     let subdiv_cuts = subdivide_cuts(cuts.cut_blocks, 0.4);
-    console.log("Subdivided Cuts: ");
-    log_array_of_strings(subdiv_cuts);
-    console.log("Z Added: \n");
+    // console.log("Subdivided Cuts: ");
+    // log_array_of_strings(subdiv_cuts);
+    // console.log("Z Added: \n");
     let cuts_with_z = add_z(subdiv_cuts, wear_ratio, pass_depth);
     // log_array_of_strings(z_added);
     let plunges = find_plunges_cuts_removed(cuts.the_rest);
-    console.log("Plunges: \n");
-    log_array_of_strings(plunges.plunges);
-    console.log("Plunges Removed: \n", plunges.the_rest);
+    // console.log("Plunges: \n");
+    // log_array_of_strings(plunges.plunges);
+    // console.log("Plunges Removed: \n", plunges.the_rest);
     let plunges_with_feeds = add_plunge_feeds(plunges.plunges, plunge_feed_rate, travel_speed_xy, 10);
     let plunges_cuts_added = put_cuts_and_plunges(cuts_with_z, plunges_with_feeds, plunges.the_rest);
-    console.log("Plunges and Cuts Added: \n", plunges_cuts_added);
+    // console.log("Plunges and Cuts Added: \n", plunges_cuts_added);
     return plunges_cuts_added;
 }
 
@@ -229,10 +214,10 @@ function add_z(cuts, wear_ratio, pass_depth) {
         }
         new_cuts.push({ gcode: new_cut, last_z: current_z });
     }
-    for (let i = 0; i < new_cuts.length; i++) {
-        console.log(new_cuts[i].gcode);
-        console.log("last_z: " + new_cuts[i].last_z);
-    }
+    // for (let i = 0; i < new_cuts.length; i++) {
+    //     console.log(new_cuts[i].gcode);
+    //     console.log("last_z: " + new_cuts[i].last_z);
+    // }
     return new_cuts;
 }
 
