@@ -30,6 +30,7 @@ const hide = [
     'MillVCarve',
     'PlasmaInside',
     'PlasmaOutside',
+    'PenPlot',
     'CW',
     'CCW',
     'toolDia',
@@ -55,6 +56,7 @@ const types = {
     'Mill Cut Inside': { show: ['MillCutInside', 'toolDia', 'millRapidZ', 'zStep', 'millStartZ', 'millEndZ'] },
     'Mill Cut Outside': { show: ['MillCutOutside', 'toolDia', 'millRapidZ', 'zStep', 'millStartZ', 'millEndZ'] },
     'Mill V Carve': { show: ['MillVCarve', 'toolAngle', 'millStartZ', 'millRapidZ', 'zStep'] },
+    'Pen Plot': { show: ['PenPlot'] },
 };
 
 export class OperationDiagram extends React.Component {

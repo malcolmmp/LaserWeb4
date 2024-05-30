@@ -124,6 +124,8 @@ export const SETTINGS_INITIALSTATE = {
     gcodeGenerator: "default",
     gcodeToolOn: "",
     gcodeToolOff: "",
+    gcodePenOn: "",
+    gcodePenOff: "",
     gcodeLaserIntensity: 'S',
     gcodeLaserIntensitySeparateLine: false,
     gcodeSMinValue: 0,

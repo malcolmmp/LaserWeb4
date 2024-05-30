@@ -150,7 +150,11 @@ export function getGcode(settings, documents, operations, documentCacheHolder, s
                     } else if (op.type.substring(0, 6) === 'Lathe ') {
 
                         invokeWebWorker(require('worker-loader!./workers/cam-lathe.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)
+                    
+                    } else if (op.type === 'Pen Plot'){
 
+                        invokeWebWorker(require('worker-loader!./workers/cam-penplot.js'), { settings, opIndex, op, geometry, openGeometry, tabGeometry }, cb, jobIndex)                   
+                    
                     } else {
                         showAlert("Unknown operation " + op.type, 'warning')
                         cb()
