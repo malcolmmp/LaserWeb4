@@ -28,6 +28,8 @@ export const SETTINGS_VALIDATION_RULES = {
     machineFluidEnabled: 'boolean',
     machineZToolOffset: 'numeric',
 
+    machinePenEnabled: 'boolean',
+
     machineAEnabled: 'boolean',
     machineAAxisDiameter: 'numeric|min:0.01',
 
@@ -110,6 +112,8 @@ export const SETTINGS_INITIALSTATE = {
     machineFluidGcodeOn: '',
     machineFluidGcodeOff: '',
 
+    machinePenEnabled: false,
+
     pxPerInch: 96,
     forcePxPerInch: false,
     dpiBitmap: 300,
@@ -158,6 +162,8 @@ export const SETTINGS_INITIALSTATE = {
     gcodeGenerator: "default",
     gcodeToolOn: "",
     gcodeToolOff: "",
+    gcodePenOn: "G1 F1 M3 S600.00 G4 P0.25",
+    gcodePenOff: "M5",
     gcodeLaserIntensity: 'S',
     gcodeLaserIntensitySeparateLine: false,
     gcodeSMinValue: 0,

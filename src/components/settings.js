@@ -382,6 +382,20 @@ class Settings extends React.Component {
                         <TextField {...{ object: this.props.settings, field: 'gcodeHoming', setAttrs: setSettingsAttrs, description: 'Homing Gcode', info: Info(<p className="help-block">
                             Code used to home the machine.
                             </p>,"Homing Gcode"), rows: 3, style: { resize: "vertical", fontFamily: "monospace, monospace" } }} />
+
+                        <ToggleField {...{ object: this.props.settings, field: 'machinePenEnabled', setAttrs: setSettingsAttrs, description: 'Pen Plotter Tool', info: Info(<p className="help-block">
+                            Gcode commands to start and stop pen plotter operations.
+                            </p>,"Pen Plotter Gcode") }} />
+                        <Collapse in={this.props.settings.machinePenEnabled}>
+                            <div>
+                                <TextField {...{ object: this.props.settings, field: 'gcodePenOn', setAttrs: setSettingsAttrs, description: 'Pen Tool ON Gcode', info: Info(<p className="help-block">
+                                    Optional: Gcode commands to run before each pen marking sequence in the generated code.<br/>- Use for firmwares without safe laser modes.<br/>- Not used in Mill/Lathe operations.<br/>- The keyword <strong>$INTENSITY</strong> will be replaced by the calculated power value.
+                                    </p>,"Pen Tool On Gcode"), rows: 3, style: { resize: "vertical", fontFamily: "monospace, monospace" } }} />
+                                <TextField {...{ object: this.props.settings, field: 'gcodePenOff', setAttrs: setSettingsAttrs, description: 'Pen Tool OFF Gcode', info: Info(<p className="help-block">
+                                    Optional: Gcode commands to run after each pen marking sequence in the generated code.<br/>- Use for firmwares without safe laser modes.<br/>- Not used in Mill/Lathe operations.<br/><br/><strong>If your machine does not automatically switch off the laser when movement stops (safe laser mode) you must ensure this is set correctly!</strong>
+                                    </p>,"Pen Tool Off Gcode"), rows: 3, style:{ resize: "vertical", fontFamily: "monospace, monospace" } }} />
+                            </div>
+                        </Collapse>
                         <TextField {...{ object: this.props.settings, field: 'gcodeToolOn', setAttrs: setSettingsAttrs, description: 'Laser Tool ON Gcode', info: Info(<p className="help-block">
                             Optional: Gcode commands to run before each powered laser cut sequence in the generated code.<br/>- Use for firmwares without safe laser modes.<br/>- Not used in Mill/Lathe operations.<br/>- The keyword <strong>$INTENSITY</strong> will be replaced by the calculated power value.
                             </p>,"Laser Tool On Gcode"), rows: 3, style: { resize: "vertical", fontFamily: "monospace, monospace" } }} />
