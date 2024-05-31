@@ -138,6 +138,7 @@ export const SETTINGS_INITIALSTATE = {
 
     comServerVersion: 'not connected',
     comServerIP: 'localhost:8000',
+    comServerSecure: false,
     comServerConnect: false,
     comInterfaces: [],
     comPorts: [],
