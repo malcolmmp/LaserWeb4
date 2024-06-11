@@ -115,12 +115,9 @@
   },
   "dependencies": {
     "bootstrap-range-input": "^1.0.0",
-    "bufferutil": "^4.0.7",
     "dxf-parser": "^0.4.8",
-    "hoek": "^5.0.3",
     "immutability-helper": "^2.9.1",
     "object.omit": "^3.0.0",
-    "unicode": "^9.0.0",
     "vectorize-text": "^3.2.1"
   }
 }
